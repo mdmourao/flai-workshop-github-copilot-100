@@ -1,7 +1,5 @@
 """Tests for the High School Management System API endpoints"""
 
-import pytest
-
 
 class TestRootEndpoint:
     """Tests for the root endpoint"""
@@ -102,6 +100,32 @@ class TestSignupEndpoint:
         )
         assert response.status_code == 200
 
+    def test_signup_when_activity_is_full(self, client):
+        """Test that signup fails when activity has reached max capacity"""
+        # Drama Club has max_participants = 15
+        # First, fill up the activity to its maximum capacity
+        response = client.get("/activities")
+        drama_club = response.json()["Drama Club"]
+        current_count = len(drama_club["participants"])
+        max_capacity = drama_club["max_participants"]
+        
+        # Fill remaining spots
+        for i in range(max_capacity - current_count):
+            email = f"student{i}@mergington.edu"
+            response = client.post(
+                "/activities/Drama Club/signup",
+                params={"email": email}
+            )
+            assert response.status_code == 200
+        
+        # Now try to add one more student - should fail
+        response = client.post(
+            "/activities/Drama Club/signup",
+            params={"email": "overflow@mergington.edu"}
+        )
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Activity is full"
+
 
 class TestUnregisterEndpoint:
     """Tests for the /activities/{activity_name}/unregister endpoint"""
@@ -184,7 +208,6 @@ class TestIntegrationScenarios:
         # View activities
         response = client.get("/activities")
         assert response.status_code == 200
-        activities_before = response.json()["Programming Class"]["participants"].copy()
         
         # Signup for an activity
         signup_response = client.post(
