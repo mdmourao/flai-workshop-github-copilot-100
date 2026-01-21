@@ -10,39 +10,52 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
-      activitiesList.innerHTML = "";
+      // Clear loading message with fade out
+      activitiesList.style.opacity = "0";
+      setTimeout(() => {
+        activitiesList.innerHTML = "";
+        activitiesList.style.opacity = "1";
 
-      // Populate activities list
-      Object.entries(activities).forEach(([name, details]) => {
-        const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+        // Populate activities list
+        Object.entries(activities).forEach(([name, details], index) => {
+          const activityCard = document.createElement("div");
+          activityCard.className = "activity-card";
+          activityCard.style.opacity = "0";
+          activityCard.style.transform = "translateY(10px)";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+          const spotsLeft = details.max_participants - details.participants.length;
 
-        const participantsList = details.participants.length > 0
-          ? `<ul>${details.participants.map(email => `<li>${email}<button class="delete-icon" data-activity="${name}" data-email="${email}" title="Remove participant">✕</button></li>`).join('')}</ul>`
-          : `<p class="no-participants">No participants yet. Be the first to sign up!</p>`;
+          const participantsList = details.participants.length > 0
+            ? `<ul>${details.participants.map(email => `<li><span>${email}</span><button class="delete-icon" data-activity="${name}" data-email="${email}" title="Remove participant" aria-label="Remove ${email}">✕</button></li>`).join('')}</ul>`
+            : `<p class="no-participants">No participants yet. Be the first to enroll.</p>`;
 
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          <div class="activity-participants">
-            <h5>Current Participants:</h5>
-            ${participantsList}
-          </div>
-        `;
+          activityCard.innerHTML = `
+            <h4>${name}</h4>
+            <p>${details.description}</p>
+            <p><strong>Schedule:</strong> ${details.schedule}</p>
+            <p><strong>Availability:</strong> ${spotsLeft} spots remaining</p>
+            <div class="activity-participants">
+              <h5>Enrolled Students</h5>
+              ${participantsList}
+            </div>
+          `;
 
-        activitiesList.appendChild(activityCard);
+          activitiesList.appendChild(activityCard);
 
-        // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
-      });
+          // Staggered animation
+          setTimeout(() => {
+            activityCard.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
+            activityCard.style.opacity = "1";
+            activityCard.style.transform = "translateY(0)";
+          }, index * 80);
+
+          // Add option to select dropdown
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          activitySelect.appendChild(option);
+        });
+      }, 300);
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);

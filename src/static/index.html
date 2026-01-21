@@ -4,46 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
-    </header>
-
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
+    <div class="app-container">
+      <header>
+        <div class="header-content">
+          <div class="brand">
+            <h1>Mergington</h1>
+            <span class="brand-subtitle">High School</span>
+          </div>
+          <div class="header-tagline">
+            <h2>Extracurricular Activities</h2>
+          </div>
         </div>
-      </section>
+      </header>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+      <main>
+        <section id="activities-container" class="glass-card">
+          <div class="section-header">
+            <h3>Available Activities</h3>
+            <span class="section-badge">Live</span>
           </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
+          <div id="activities-list">
+            <!-- Activities will be loaded here -->
+            <div class="loading-state">
+              <div class="loading-spinner"></div>
+              <p>Loading activities...</p>
+            </div>
           </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
-    </main>
+        </section>
 
-    <footer>
-      <p>&copy; 2023 Mergington High School</p>
-    </footer>
+        <section id="signup-container" class="glass-card">
+          <div class="section-header">
+            <h3>Enrollment</h3>
+          </div>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="email">Student Email</label>
+              <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            </div>
+            <div class="form-group">
+              <label for="activity">Select Activity</label>
+              <select id="activity" required>
+                <option value="">Choose an activity</option>
+                <!-- Activity options will be loaded here -->
+              </select>
+            </div>
+            <button type="submit" class="primary-button">
+              <span>Enroll Now</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+          <div id="message" class="hidden"></div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2026 Mergington High School. All rights reserved.</p>
+      </footer>
+    </div>
 
     <script src="app.js"></script>
   </body>
